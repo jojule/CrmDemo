@@ -8,6 +8,7 @@ import javax.persistence.Persistence;
 import org.vaadin.demo.crm.Backend;
 import org.vaadin.demo.crm.data.Account;
 import org.vaadin.demo.crm.data.AccountManager;
+import org.vaadin.demo.crm.data.Contact;
 import org.vaadin.demo.crm.data.Opportunity;
 
 public class Generator {
@@ -28,8 +29,25 @@ public class Generator {
 			generateAccounts(em, accounts, accountManagers);
 			ArrayList<Opportunity> opportunities = new ArrayList<Opportunity>();
 			generateOpportunities(em, opportunities, accounts);
+			ArrayList<Contact> contacts = new ArrayList<Contact>();
+			generateContacts(em, contacts, accounts);
 
 			em.getTransaction().commit();
+		}
+	}
+
+	private static void generateContacts(EntityManager em,
+			ArrayList<Contact> contacts, ArrayList<Account> accounts) {
+		for (Account a : accounts) {
+			int numberOfOpportunities = (int) (Math.random() * 6) + 1;
+			for (int i = 0; i < numberOfOpportunities; i++) {
+				Contact c = new Contact();
+				c.setAccount(a);
+				c.setFirstName(randomFirstName());
+				c.setLastName(randomLastName());
+				contacts.add(c);
+				em.persist(c);
+			}
 		}
 	}
 
@@ -52,11 +70,11 @@ public class Generator {
 	private static void generateOpportunities(EntityManager em,
 			ArrayList<Opportunity> opportunities, ArrayList<Account> accounts) {
 		for (Account a : accounts) {
-			int numberOfOpportunities = (int) (Math.random() * 6);
+			int numberOfOpportunities = (int) (Math.random() * 6) + 1;
 			for (int i = 0; i < numberOfOpportunities; i++) {
 				Opportunity o = new Opportunity();
 				o.setAccount(a);
-				o.setName(randomText((int)(Math.random()*15)+4));
+				o.setName(randomText((int) (Math.random() * 15) + 4));
 				opportunities.add(o);
 				em.persist(o);
 			}
@@ -137,7 +155,7 @@ public class Generator {
 			} else {
 				sentenceWordsLeft--;
 				sb.append(randomWord(1 + (int) (Math.random() * 3), false));
-				if (words > 0 && sentenceWordsLeft > 3 && Math.random() < 0.15)
+				if (words > 0 && sentenceWordsLeft > 2 && Math.random() < 0.2)
 					sb.append(',');
 				else if (sentenceWordsLeft == 0 || words == 0)
 					sb.append('.');
