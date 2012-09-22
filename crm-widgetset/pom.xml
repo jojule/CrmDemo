@@ -134,4 +134,10 @@
 			</plugins>
 		</pluginManagement>
 	</build>
+	<description>Widgetset for the CRM demo application. This is separated from UI to speed up development. Because there are no custom widgets in this project, the widgetset is only compiled once and no recompilcation is needed for UI changes.</description>
+	<organization>
+		<name>Vaadin</name>
+		<url>http://vaadin.com/</url>
+	</organization>
+	<name>CRM Demo Widgetset</name>
 </project>
