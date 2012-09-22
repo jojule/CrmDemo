@@ -1,5 +1,6 @@
 package org.vaadin.demo.crm.ui;
 
+import org.vaadin.demo.crm.Backend;
 import org.vaadin.demo.crm.data.Account;
 
 import com.vaadin.addon.touchkit.ui.NavigationManager.NavigationEvent;
@@ -95,14 +96,21 @@ public class AccountListView extends NavigationView implements
 	}
 
 	private Container generateDummyAccounts() {
+		
 		BeanItemContainer<Account> container = new BeanItemContainer<Account>(
 				Account.class);
-		for (int i = 0; i < 100; i++) {
-			Account a = new Account();
-			a.setName("" + i + " Inc");
-			a.setSales((int) (Math.random() * 10000000));
+		
+		// for (int i = 0; i < 100; i++) {
+		// Account a = new Account();
+		// a.setName("" + i + " Inc");
+		// a.setSales((int) (Math.random() * 10000000));
+		// container.addBean(a);
+		// }
+
+		for (Account a : Backend.getAllAccounts()) {
 			container.addBean(a);
 		}
+
 		return container;
 	}
 

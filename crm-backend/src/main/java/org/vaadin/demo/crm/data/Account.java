@@ -1,7 +1,16 @@
 package org.vaadin.demo.crm.data;
 
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+
+@Entity
 public class Account extends Record {
 
+    @Id
+    @GeneratedValue(strategy = GenerationType.AUTO)
+    private Long id;
 	String name;
 	int sales;
 	String country;
@@ -9,6 +18,7 @@ public class Account extends Record {
 	String street;
 	String website;
 	String phone;
+	boolean active;
 	AccountManager accountManager;
 	
 	public String getName() {
@@ -33,6 +43,14 @@ public class Account extends Record {
 
 	public void setZip(String zip) {
 		this.zip = zip;
+	}
+
+	public boolean isActive() {
+		return active;
+	}
+
+	public void setActive(boolean active) {
+		this.active = active;
 	}
 
 	public String getStreet() {
@@ -78,5 +96,32 @@ public class Account extends Record {
 	public void setSales(int sales) {
 		this.sales = sales;
 	}
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
+    
+    public boolean equals(Object obj) {
+        if (obj instanceof Account) {
+            Account p = (Account) obj;
+            if (this == p) {
+                return true;
+            }
+            if (this.id == null || p.id == null) {
+                return false;
+            }
+            return this.id.equals(p.id);
+        }
+
+        return super.equals(obj);
+    }
+
+    public int hashCode() {
+        return id == null ? 0 : id.hashCode();
+    }
 
 }
