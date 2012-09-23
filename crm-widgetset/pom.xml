@@ -16,8 +16,7 @@
 		<dependency>
 			<groupId>com.vaadin.addon</groupId>
 			<artifactId>vaadin-touchkit-agpl</artifactId>
-			<version>2.1.0</version>
-			<type>jar</type>
+			<version>2.1.2-SNAPSHOT</version>
 		</dependency>
 		<dependency>
 			<groupId>org.vaadin.addons</groupId>
@@ -38,7 +37,7 @@
 	</dependencies>
 
 	<build>
-	
+
 		<resources>
 			<resource>
 				<directory>${project.build.directory}/widgetset</directory>
@@ -65,6 +64,7 @@
 				<configuration>
 					<extraJvmArgs>-Xmx512M -Xss1024k</extraJvmArgs>
 					<webappDirectory>${project.build.directory}/widgetset/VAADIN/widgetsets</webappDirectory>
+					<force>true</force>
 				</configuration>
 				<executions>
 					<execution>
