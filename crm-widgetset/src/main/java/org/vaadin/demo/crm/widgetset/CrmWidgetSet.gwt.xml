@@ -1,4 +1,6 @@
 <module>
 	<inherits name="com.vaadin.terminal.gwt.DefaultWidgetSet" /> 
 	<inherits name="com.vaadin.addon.touchkit.gwt.TouchKitWidgetSet" />
+
+    <inherits name="org.vaadin.alump.distributionbar.widgetset.DistributionBarWidgetset" />
 </module>
