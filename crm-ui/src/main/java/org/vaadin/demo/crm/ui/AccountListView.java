@@ -27,7 +27,7 @@ public class AccountListView extends NavigationView {
 	Button findButton = new Button("Find", new ClickListener() {
 		public void buttonClick(ClickEvent event) {
 			accounts.removeAllContainerFilters();
-			getWindow().addWindow(new FindDialog());
+			new FindDialog();
 		}
 	});
 
