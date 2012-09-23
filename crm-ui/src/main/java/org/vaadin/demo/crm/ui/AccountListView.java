@@ -3,14 +3,14 @@ package org.vaadin.demo.crm.ui;
 import org.vaadin.demo.crm.Backend;
 import org.vaadin.demo.crm.data.Account;
 
+import com.vaadin.addon.jpacontainer.EntityItem;
+import com.vaadin.addon.jpacontainer.JPAContainer;
+import com.vaadin.addon.jpacontainer.JPAContainerFactory;
 import com.vaadin.addon.touchkit.ui.NavigationManager.NavigationEvent;
 import com.vaadin.addon.touchkit.ui.NavigationManager.NavigationListener;
 import com.vaadin.addon.touchkit.ui.NavigationView;
 import com.vaadin.addon.touchkit.ui.Popover;
-import com.vaadin.data.Container;
-import com.vaadin.data.Container.Filter;
-import com.vaadin.data.Item;
-import com.vaadin.data.util.BeanItemContainer;
+import com.vaadin.data.util.filter.SimpleStringFilter;
 import com.vaadin.event.ItemClickEvent;
 import com.vaadin.event.ItemClickEvent.ItemClickListener;
 import com.vaadin.ui.Alignment;
@@ -25,6 +25,8 @@ public class AccountListView extends NavigationView implements
 		ItemClickListener, ClickListener {
 	Table accountList = new Table();
 	Button findButton = new Button("Find");
+	JPAContainer<Account> accounts = JPAContainerFactory.make(Account.class,
+			Backend.PERSISTENCE_UNIT);
 
 	public AccountListView() {
 		getNavigationBar().setCaption("Accounts");
@@ -33,7 +35,7 @@ public class AccountListView extends NavigationView implements
 		accountList.addListener(this);
 		accountList.setSizeFull();
 		accountList.setImmediate(true);
-		accountList.setContainerDataSource(generateDummyAccounts());
+		accountList.setContainerDataSource(accounts);
 		accountList.setVisibleColumns(new Object[] { "name", "sales" });
 
 		getNavigationBar().setLeftComponent(findButton);
@@ -42,10 +44,9 @@ public class AccountListView extends NavigationView implements
 
 	/* Choose an account */
 	public void itemClick(ItemClickEvent event) {
-		if (getNavigationManager().getCurrentComponent() != this) return;
-		@SuppressWarnings("unchecked")
-		Account account = ((BeanItemContainer<Account>) accountList
-				.getContainerDataSource()).getItem(event.getItemId()).getBean();
+		if (getNavigationManager().getCurrentComponent() != this)
+			return;
+		EntityItem<Account> account = accounts.getItem(event.getItemId());
 		AccountView accountView = new AccountView(account);
 		getNavigationManager().navigateTo(accountView);
 		((CrmApp) getApplication()).showDetails(account);
@@ -59,8 +60,7 @@ public class AccountListView extends NavigationView implements
 	/* Find */
 	public void buttonClick(ClickEvent event) {
 		final Popover p = new Popover();
-		((Container.Filterable) accountList.getContainerDataSource())
-				.removeAllContainerFilters();
+		accounts.removeAllContainerFilters();
 		getWindow().addWindow(p);
 		p.showRelativeTo(findButton);
 
@@ -78,41 +78,10 @@ public class AccountListView extends NavigationView implements
 
 		search.addListener(new ClickListener() {
 			public void buttonClick(ClickEvent event) {
-				((Container.Filterable) accountList.getContainerDataSource())
-						.addContainerFilter(new Filter() {
-
-							public boolean passesFilter(Object itemId, Item item) {
-								return ("" + item.getItemProperty("name")
-										.getValue()).contains(("" + name
-										.getValue()));
-							}
-
-							public boolean appliesToProperty(Object propertyId) {
-								return "Name".equals(propertyId);
-							}
-						});
+				accounts.addContainerFilter(new SimpleStringFilter("name", (String) name
+						.getValue(), true, false));
 				getWindow().removeWindow(p);
 			}
 		});
 	}
-
-	private Container generateDummyAccounts() {
-		
-		BeanItemContainer<Account> container = new BeanItemContainer<Account>(
-				Account.class);
-		
-		// for (int i = 0; i < 100; i++) {
-		// Account a = new Account();
-		// a.setName("" + i + " Inc");
-		// a.setSales((int) (Math.random() * 10000000));
-		// container.addBean(a);
-		// }
-
-		for (Account a : Backend.getAllAccounts()) {
-			container.addBean(a);
-		}
-
-		return container;
-	}
-
 }

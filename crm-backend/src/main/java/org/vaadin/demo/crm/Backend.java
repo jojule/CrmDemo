@@ -17,10 +17,6 @@ import org.vaadin.demo.crm.data.mockup.Generator;
 public class Backend {
 	public static final String PERSISTENCE_UNIT = "org.vaadin.demo.crm";
 
-	static {
-		Generator.ensureAvailabilityOfMockupData();
-	}
-
 	public static EntityManager getEntityManager() {
 		return Persistence.createEntityManagerFactory(Backend.PERSISTENCE_UNIT)
 				.createEntityManager();
