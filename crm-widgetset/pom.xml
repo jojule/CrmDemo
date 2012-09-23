@@ -39,10 +39,12 @@
 				<artifactId>maven-jar-plugin</artifactId>
 				<version>2.4</version>
 				<configuration>
-					<classesDirectory>${basedir}/src/main/webapp</classesDirectory>
-				<excludes>
-					<exclude>VAADIN/widgetsets/WEB-INF/**</exclude>
-				</excludes>
+					<!-- All we need for this package is the javascripts compiled by GWT -->
+					<classesDirectory>widgetset</classesDirectory>
+					<!-- Skip stuff that is needed only when debugging client side stuff -->
+					<excludes>
+						<exclude>VAADIN/widgetsets/WEB-INF/**</exclude>
+					</excludes>
 				</configuration>
 			</plugin>
 			<plugin>
@@ -51,11 +53,7 @@
 				<version>2.3.0-1</version>
 				<configuration>
 					<extraJvmArgs>-Xmx512M -Xss1024k</extraJvmArgs>
-					<!-- <webappDirectory>${project.build.outputDirectory}/VAADIN/widgetsets</webappDirectory> -->
-					<!-- We use resources directory instead of ${project.build.outputDirectory} 
-						to be compatible with Eclipse WTP -->
-					<webappDirectory>${basedir}/src/main/webapp/VAADIN/widgetsets
-					</webappDirectory>
+					<webappDirectory>${project.build.directory}/widgetset/VAADIN/widgetsets</webappDirectory>
 				</configuration>
 				<executions>
 					<execution>
@@ -66,18 +64,6 @@
 					</execution>
 				</executions>
 			</plugin>
-			<plugin>
-				<artifactId>maven-clean-plugin</artifactId>
-				<version>2.4.1</version>
-				<configuration>
-					<filesets>
-						<fileset>
-							<directory>src/main/webapp/VAADIN/widgetsets</directory>
-						</fileset>
-					</filesets>
-				</configuration>
-			</plugin>
-
 			<plugin>
 				<groupId>com.vaadin</groupId>
 				<artifactId>vaadin-maven-plugin</artifactId>
