@@ -40,6 +40,9 @@
 
 		<resources>
 			<resource>
+				<directory>${basedir}/src/main/resources</directory>
+			</resource>
+			<resource>
 				<directory>${project.build.directory}/widgetset</directory>
 			</resource>
 		</resources>
