@@ -1,11 +1,9 @@
 package org.vaadin.demo.crm.ui;
 
 import java.util.HashMap;
-import java.util.LinkedList;
 
 import org.vaadin.demo.crm.Backend;
 import org.vaadin.demo.crm.data.Account;
-import org.vaadin.demo.crm.data.Opportunity;
 import org.vaadin.demo.crm.data.Record;
 
 import com.vaadin.addon.touchkit.ui.NavigationView;
@@ -35,6 +33,7 @@ public class AccountView extends NavigationView {
 		VerticalLayout lo = new VerticalLayout();
 		setContent(lo);
 		
+		@SuppressWarnings("rawtypes")
 		HashMap<Class, VerticalComponentGroup> groups = new HashMap<Class, VerticalComponentGroup>();
 		for (final Record r : Backend.getRecords(account)) {
 			VerticalComponentGroup g = groups.get(r.getClass());
@@ -51,8 +50,10 @@ public class AccountView extends NavigationView {
 				});
 			}
 			Label b = new Label(r.getRecordName());
+			b.setSizeUndefined();
 			relatedRecord.put(b, r);
 			g.addComponent(b);
+			b.setStyleName("v-touchkit-navbutton");
 		}
 	}
 }

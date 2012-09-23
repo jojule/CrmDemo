@@ -9,9 +9,8 @@ import com.vaadin.addon.touchkit.ui.NavigationView;
 import com.vaadin.addon.touchkit.ui.Popover;
 import com.vaadin.data.Container;
 import com.vaadin.data.Container.Filter;
-import com.vaadin.data.util.BeanItemContainer;
-import com.vaadin.data.util.IndexedContainer;
 import com.vaadin.data.Item;
+import com.vaadin.data.util.BeanItemContainer;
 import com.vaadin.event.ItemClickEvent;
 import com.vaadin.event.ItemClickEvent.ItemClickListener;
 import com.vaadin.ui.Alignment;
@@ -43,6 +42,8 @@ public class AccountListView extends NavigationView implements
 
 	/* Choose an account */
 	public void itemClick(ItemClickEvent event) {
+		if (getNavigationManager().getCurrentComponent() != this) return;
+		@SuppressWarnings("unchecked")
 		Account account = ((BeanItemContainer<Account>) accountList
 				.getContainerDataSource()).getItem(event.getItemId()).getBean();
 		AccountView accountView = new AccountView(account);
