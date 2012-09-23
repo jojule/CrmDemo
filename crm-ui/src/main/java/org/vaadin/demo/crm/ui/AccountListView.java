@@ -88,7 +88,7 @@ public class AccountListView extends NavigationView {
 		public void buttonClick(ClickEvent event) {
 			accounts.addContainerFilter(new SimpleStringFilter("name",
 					(String) nameFilter.getValue(), true, false));
-			getWindow().removeWindow(this);
+			AccountListView.this.getWindow().removeWindow(this);
 		}
 	}
 }
