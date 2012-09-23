@@ -33,6 +33,12 @@
 	</dependencies>
 
 	<build>
+	
+		<resources>
+			<resource>
+				<directory>${project.build.directory}/widgetset</directory>
+			</resource>
+		</resources>
 		<plugins>
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
@@ -40,7 +46,7 @@
 				<version>2.4</version>
 				<configuration>
 					<!-- All we need for this package is the javascripts compiled by GWT -->
-					<classesDirectory>widgetset</classesDirectory>
+					<classesDirectory>${project.build.directory}/widgetset</classesDirectory>
 					<!-- Skip stuff that is needed only when debugging client side stuff -->
 					<excludes>
 						<exclude>VAADIN/widgetsets/WEB-INF/**</exclude>
@@ -57,6 +63,7 @@
 				</configuration>
 				<executions>
 					<execution>
+						<phase>generate-resources</phase>
 						<goals>
 							<goal>resources</goal>
 							<goal>compile</goal>
