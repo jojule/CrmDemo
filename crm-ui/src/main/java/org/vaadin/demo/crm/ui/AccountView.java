@@ -6,6 +6,7 @@ import org.vaadin.demo.crm.Backend;
 import org.vaadin.demo.crm.data.Account;
 import org.vaadin.demo.crm.data.Record;
 
+import com.vaadin.addon.touchkit.ui.NavigationButton;
 import com.vaadin.addon.touchkit.ui.NavigationView;
 import com.vaadin.addon.touchkit.ui.VerticalComponentGroup;
 import com.vaadin.event.LayoutEvents.LayoutClickEvent;
@@ -18,8 +19,6 @@ import com.vaadin.ui.Label;
 import com.vaadin.ui.VerticalLayout;
 
 public class AccountView extends NavigationView {
-
-	HashMap<Component, Record> relatedRecord = new HashMap<Component, Record>();
 
 	public AccountView(final Account account) {
 		getNavigationBar().setCaption(account.getRecordName());
@@ -42,18 +41,14 @@ public class AccountView extends NavigationView {
 				g.setCaption(r.getRecordTypePlural());
 				groups.put(r.getClass(), g);
 				lo.addComponent(g);
-				g.addListener(new LayoutClickListener() {
-					public void layoutClick(LayoutClickEvent event) {
-						((CrmApp) getApplication()).showDetails(relatedRecord
-								.get(event.getChildComponent()));
-					}
-				});
 			}
-			Label b = new Label(r.getRecordName());
-			b.setSizeUndefined();
-			relatedRecord.put(b, r);
+			Button b = new Button(r.getRecordName(), new ClickListener() {
+				public void buttonClick(ClickEvent event) {
+					((CrmApp) getApplication()).showDetails(r);
+				}
+			});
 			g.addComponent(b);
-			b.setStyleName("v-touchkit-navbutton");
+			b.setStyleName("nav");
 		}
 	}
 }

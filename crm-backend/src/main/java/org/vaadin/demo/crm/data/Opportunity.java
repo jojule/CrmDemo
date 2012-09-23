@@ -7,12 +7,14 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.ManyToOne;
+import javax.persistence.Temporal;
+import javax.persistence.TemporalType;
 
 @Entity
 public class Opportunity extends Record {
 
-	// TODO
-//	Date expected;
+	@Temporal(TemporalType.DATE)
+	Date expected;
 	int amount;
 	String name;
 	String description;
@@ -31,13 +33,13 @@ public class Opportunity extends Record {
 		this.account = account;
 	}
 
-//	public Date getExpected() {
-//		return expected;
-//	}
-//
-//	public void setExpected(Date expected) {
-//		this.expected = expected;
-//	}
+	public Date getExpected() {
+		return expected;
+	}
+
+	public void setExpected(Date expected) {
+		this.expected = expected;
+ }
 
 	public int getAmount() {
 		return amount;

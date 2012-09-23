@@ -69,21 +69,21 @@ public class Backend {
 				.random()));
 		stages[0].setProbabilityAdjustedValue(stages[0].getTotalValue() / 10);
 
-		opportunityCount *= Math.random();
+		opportunityCount *= Math.random() * 1.8;
 		stages[1].setName("Needs Analysis");
 		stages[1].setOpportunityCount(opportunityCount);
 		stages[1].setTotalValue((int) (opportunityCount * meanValue * 2 * Math
 				.random()));
 		stages[1].setProbabilityAdjustedValue(stages[1].getTotalValue() / 5);
 
-		opportunityCount *= Math.random();
+		opportunityCount *= Math.random()  * 1.8;
 		stages[2].setName("Value Proposition");
 		stages[2].setOpportunityCount(opportunityCount);
 		stages[2].setTotalValue((int) (opportunityCount * meanValue * 2 * Math
 				.random()));
 		stages[2].setProbabilityAdjustedValue(stages[2].getTotalValue() / 3);
 
-		opportunityCount *= Math.random();
+		opportunityCount *= Math.random()  * 1.8;
 		stages[3].setName("Perception Analysis");
 		stages[3].setOpportunityCount(opportunityCount);
 		stages[3].setTotalValue((int) (opportunityCount * meanValue * 2 * Math
@@ -91,7 +91,7 @@ public class Backend {
 		stages[3]
 				.setProbabilityAdjustedValue((int) (stages[3].getTotalValue() * 0.45));
 
-		opportunityCount *= Math.random();
+		opportunityCount *= Math.random() * 1.8;
 		stages[4].setName("Proposal/Price Quote");
 		stages[4].setOpportunityCount(opportunityCount);
 		stages[4].setTotalValue((int) (opportunityCount * meanValue * 2 * Math
@@ -99,7 +99,7 @@ public class Backend {
 		stages[4]
 				.setProbabilityAdjustedValue((int) (stages[4].getTotalValue() * 0.65));
 
-		opportunityCount *= Math.random();
+		opportunityCount *= Math.random() * 1.8;
 		stages[5].setName("Negotiation/Review");
 		stages[5].setOpportunityCount(opportunityCount);
 		stages[5].setTotalValue((int) (opportunityCount * meanValue * 2 * Math
