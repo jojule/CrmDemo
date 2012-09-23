@@ -11,6 +11,7 @@ import javax.persistence.ManyToOne;
 @Entity
 public class Opportunity extends Record {
 
+	// TODO
 //	Date expected;
 	int amount;
 	String name;
