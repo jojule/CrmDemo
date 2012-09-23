@@ -15,40 +15,65 @@ import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.Button.ClickListener;
 import com.vaadin.ui.VerticalLayout;
 
-public class AccountView extends NavigationView {
+public class AccountView extends NavigationView implements
+		DetailsView.UpdateListener {
 
-	public AccountView(final EntityItem<Account> account) {
+	EntityItem<Account> account;
+
+	VerticalLayout layout = new VerticalLayout();
+	Button editButton = new Button("Edit", new ClickListener() {
+		public void buttonClick(ClickEvent event) {
+			((CrmApp) getApplication()).showDetailsView(account, AccountView.this);
+		}
+	});
+
+	public AccountView(EntityItem<Account> account) {
+		this.account = account;
+
+		setContent(layout);
 		getNavigationBar().setCaption(account.getEntity().getRecordName());
+		getNavigationBar().setRightComponent(editButton);
 
-		getNavigationBar().setRightComponent(
-				new Button("Edit", new ClickListener() {
-					public void buttonClick(ClickEvent event) {
-						((CrmApp) getApplication()).showDetails(account);
-					}
-				}));
+		updateNavigationButtonsForRelatedRecords();
+	}
 
-		VerticalLayout lo = new VerticalLayout();
-		setContent(lo);
+	public void updateNavigationButtonsForRelatedRecords() {
+
+		layout.removeAllComponents();
 
 		@SuppressWarnings("rawtypes")
-		HashMap<Class, VerticalComponentGroup> groups = new HashMap<Class, VerticalComponentGroup>();
-		for (final Record r : Backend.getRecords((Account) account.getEntity())) {
-			VerticalComponentGroup g = groups.get(r.getClass());
-			if (g == null) {
-				g = new VerticalComponentGroup();
-				g.setCaption(r.getRecordTypePlural());
-				groups.put(r.getClass(), g);
-				lo.addComponent(g);
+		HashMap<Class, VerticalComponentGroup> buttonGroups = new HashMap<Class, VerticalComponentGroup>();
+
+		for (Record r : Backend.getRecords((Account) account.getEntity())) {
+			VerticalComponentGroup buttonGroup = buttonGroups.get(r.getClass());
+
+			if (buttonGroup == null) {
+				buttonGroup = new VerticalComponentGroup();
+				buttonGroup.setCaption(r.getRecordTypePlural());
+				buttonGroups.put(r.getClass(), buttonGroup);
+				layout.addComponent(buttonGroup);
 			}
-			Button b = new Button(r.getRecordName(), new ClickListener() {
-				public void buttonClick(ClickEvent event) {
-					((CrmApp) getApplication()).showDetails(JPAContainerFactory
-							.make(r.getClass(), Backend.PERSISTENCE_UNIT)
-							.getItem(r.getId()));
-				}
-			});
-			g.addComponent(b);
-			b.setStyleName("nav");
+
+			// Create a button to show the given records
+			final Long recordId = r.getId();
+			final Class<? extends Record> recordClass = r.getClass();
+			Button showRecordButton = new Button(r.getRecordName(),
+					new ClickListener() {
+						public void buttonClick(ClickEvent event) {
+							EntityItem<? extends Record> item = JPAContainerFactory
+									.make(recordClass, Backend.PERSISTENCE_UNIT)
+									.getItem(recordId);
+							((CrmApp) getApplication()).showDetailsView(item,
+									AccountView.this);
+						}
+					});
+			buttonGroup.addComponent(showRecordButton);
+			showRecordButton.setStyleName("nav");
 		}
+	}
+
+	public void recordUpdatedByDetailsView() {
+		updateNavigationButtonsForRelatedRecords();
+		getNavigationBar().setCaption(account.getEntity().getRecordName());
 	}
 }

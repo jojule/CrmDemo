@@ -1,5 +1,8 @@
 package org.vaadin.demo.crm.ui;
 
+import java.util.Iterator;
+import java.util.LinkedList;
+
 import org.vaadin.demo.crm.data.Record;
 
 import com.vaadin.addon.jpacontainer.EntityContainer;
@@ -13,74 +16,115 @@ import com.vaadin.data.Property;
 import com.vaadin.ui.AbstractSelect;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;
+import com.vaadin.ui.Button.ClickListener;
 import com.vaadin.ui.Component;
 import com.vaadin.ui.Field;
 import com.vaadin.ui.Form;
+import com.vaadin.ui.Layout;
 import com.vaadin.ui.TextArea;
-import com.vaadin.ui.VerticalLayout;
 
 public class DetailsView extends NavigationView {
 
-	public void setRecord(EntityItem<? extends Record> record) {
-		getNavigationBar().setCaption(record.getEntity().getRecordType());
+	Form recordForm = new Form();
+	VerticalComponentGroup formGroup = new VerticalComponentGroup();
+	Button saveButton = new Button("Save", new ClickListener() {
+		public void buttonClick(ClickEvent event) {
+			recordForm.commit();
+			if (updateListener != null)
+				updateListener.recordUpdatedByDetailsView();
+		}
+	});
+	Button discardButton = new Button("Discard", new ClickListener() {
+		public void buttonClick(ClickEvent event) {
+			recordForm.discard();
+		}
+	});
+	UpdateListener updateListener;
 
-		VerticalLayout lo = new VerticalLayout();
-		setContent(lo);
+	public DetailsView() {
+		getNavigationBar().setRightComponent(saveButton);
+		getNavigationBar().setLeftComponent(discardButton);
 
-		VerticalComponentGroup formGroup = new VerticalComponentGroup();
-		formGroup.setCaption(record.getEntity().getRecordName());
-		lo.addComponent(formGroup);
-		final Form form = new Form();
-		formGroup.addComponent(form);
-		form.setFormFieldFactory(new DefailsFieldFactory());
-		form.setWriteThrough(false);
-		form.setItemDataSource(record);
+		setContent(formGroup);
+		formGroup.addComponent(recordForm);
 
-		getNavigationBar().setRightComponent(
-				new Button("Save", new Button.ClickListener() {
-					public void buttonClick(ClickEvent event) {
-						form.commit();
-					}
-				}));
-		getNavigationBar().setLeftComponent(
-				new Button("Discard", new Button.ClickListener() {
-					public void buttonClick(ClickEvent event) {
-						form.discard();
-					}
-				}));
+		recordForm.setFormFieldFactory(new DefailsFieldFactory());
+		recordForm.setWriteThrough(false);
 	}
 
-	/* Custom mobile field types */
+	public void setRecord(EntityItem<? extends Record> record,
+			UpdateListener listener) {
+		getNavigationBar().setCaption(record.getEntity().getRecordType());
+		formGroup.setCaption(record.getEntity().getRecordName());
+
+		recordForm.setItemDataSource(record);
+		sortFormFields();
+		updateListener = listener;
+
+	}
+
+	// Customize the fields in the form
 	class DefailsFieldFactory extends FieldFactory {
 
+		// Show record names properly in entity link dropdowns
 		protected Field createManyToOneField(
-				@SuppressWarnings("rawtypes") EntityContainer containerForProperty, Object itemId,
-				Object propertyId, Component uiContext) {
-			Field f = super.createManyToOneField(containerForProperty, itemId, propertyId,
-					uiContext);
-			if (Record.class.isAssignableFrom(containerForProperty.getType(propertyId)) && f instanceof AbstractSelect)
-				((AbstractSelect)f).setItemCaptionPropertyId("recordName");
+				@SuppressWarnings("rawtypes") EntityContainer containerForProperty,
+				Object itemId, Object propertyId, Component uiContext) {
+			Field f = super.createManyToOneField(containerForProperty, itemId,
+					propertyId, uiContext);
+			if (Record.class.isAssignableFrom(containerForProperty
+					.getType(propertyId)) && f instanceof AbstractSelect)
+				((AbstractSelect) f).setItemCaptionPropertyId("recordName");
 			return f;
 		}
 
-		public Field createField(Item item, Object propertyId,
-				Component uiContext) {
+		public Field createField(Item item, Object propertyId, Component context) {
+
+			// Hide technical fields from form
 			if (propertyId.equals("recordName")
 					|| propertyId.equals("recordTypePlural")
 					|| propertyId.equals("id")
 					|| propertyId.equals("recordType"))
 				return null;
-			Property p = item.getItemProperty(propertyId);
-			if (p.getType() == Boolean.class)
-				return new Switch("" + propertyId, p);
-			if (p.getType() == String.class && propertyId.equals("description")) {
-				TextArea a = new TextArea("" + propertyId, p);
+
+			Property fieldDatasource = item.getItemProperty(propertyId);
+			if (fieldDatasource.getType() == Boolean.class) {
+				String name = "" + propertyId;
+				name = Character.toUpperCase(name.charAt(0)) + name.substring(1);
+				return new Switch(name, fieldDatasource);
+			}
+			if (fieldDatasource.getType() == String.class
+					&& propertyId.equals("description")) {
+				TextArea a = new TextArea("Description", fieldDatasource);
 				a.setNullRepresentation("");
 				a.setWidth("100%");
 				a.setRows(10);
 				return a;
 			}
-			return super.createField(item, propertyId, uiContext);
+
+			// Resize the fields to be 100% wide
+			Field field = super.createField(item, propertyId, context);
+			field.setWidth("100%");
+			return field;
 		}
+	}
+
+	private void sortFormFields() {
+		Layout l = recordForm.getLayout();
+		LinkedList<Component> tmp = new LinkedList<Component>();
+		for (Iterator<Component> i = l.getComponentIterator(); i.hasNext();) {
+			Component c = i.next();
+			if (!c.getCaption().toLowerCase().contains("name")) {
+				tmp.add(c);
+			}
+		}
+		for (Component c : tmp) 
+			l.removeComponent(c);
+		for (Component c : tmp)
+			l.addComponent(c);
+	}
+
+	interface UpdateListener {
+		public void recordUpdatedByDetailsView();
 	}
 }

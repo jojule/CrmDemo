@@ -2,6 +2,7 @@ package org.vaadin.demo.crm.ui;
 
 import org.vaadin.demo.crm.data.Record;
 import org.vaadin.demo.crm.data.mockup.Generator;
+import org.vaadin.demo.crm.ui.DetailsView.UpdateListener;
 
 import com.vaadin.addon.jpacontainer.EntityItem;
 import com.vaadin.addon.touchkit.ui.NavigationManager;
@@ -36,13 +37,14 @@ public class CrmApp extends TouchKitApplication {
 		rightNavigation.setCurrentComponent(dashboardView);
 	}
 
-	public void showDetails(EntityItem<? extends Record> record) {
+	public void showDetailsView(EntityItem<? extends Record> recordToEdit,
+			UpdateListener listener) {
 		while (rightNavigation.getCurrentComponent() != detailsView)
 			rightNavigation.navigateBack();
-		detailsView.setRecord(record);
+		detailsView.setRecord(recordToEdit, listener);
 	}
 
-	public void hideDetails() {
+	public void hideDetailsView() {
 		rightNavigation.navigateTo(dashboardView);
 	}
 

@@ -38,7 +38,7 @@ public class AccountListView extends NavigationView {
 	}
 	
 	protected void onBecomingVisible() {
-		((CrmApp) getApplication()).hideDetails();
+		((CrmApp) getApplication()).hideDetailsView();
 		super.onBecomingVisible();
 	}
 
@@ -60,7 +60,7 @@ public class AccountListView extends NavigationView {
 			AccountView accountView = new AccountView(account);
 			getNavigationManager().navigateTo(accountView);
 
-			((CrmApp) getApplication()).showDetails(account);
+			((CrmApp) getApplication()).showDetailsView(account, accountView);
 		}
 
 	}
