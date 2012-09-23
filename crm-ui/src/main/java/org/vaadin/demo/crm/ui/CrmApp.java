@@ -16,7 +16,7 @@ public class CrmApp extends TouchKitApplication {
 
 	DetailsView detailsView = new DetailsView();
 	AccountListView accountListView = new AccountListView();
-	DashboardView dashboardView = new DashboardView();
+	StatusView dashboardView = new StatusView();
 
 	public void onBrowserDetailsReady() {
 		TouchKitWindow w = new TouchKitWindow();
