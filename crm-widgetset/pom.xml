@@ -70,7 +70,6 @@
 					<execution>
 						<phase>generate-resources</phase>
 						<goals>
-							<goal>resources</goal>
 							<goal>compile</goal>
 						</goals>
 					</execution>

@@ -1,13 +1,17 @@
 package org.vaadin.demo.crm.ui;
 
 import org.vaadin.demo.crm.data.Record;
+import org.vaadin.demo.crm.data.mockup.Generator;
 
+import com.vaadin.addon.jpacontainer.EntityItem;
 import com.vaadin.addon.touchkit.ui.NavigationManager;
 import com.vaadin.addon.touchkit.ui.TouchKitApplication;
 import com.vaadin.addon.touchkit.ui.TouchKitWindow;
 import com.vaadin.ui.HorizontalLayout;
 
 public class CrmApp extends TouchKitApplication {
+	
+	static { Generator.ensureAvailabilityOfMockupData(); }
 
 	HorizontalLayout lo = new HorizontalLayout();
 
@@ -36,7 +40,7 @@ public class CrmApp extends TouchKitApplication {
 		right.setCurrentComponent(dashboardView);
 	}
 
-	public void showDetails(Record record) {
+	public void showDetails(EntityItem<? extends Record> record) {
 		if (right.getPreviousComponent() == detailsView)
 			right.navigateBack();
 		detailsView.setRecord(record);
