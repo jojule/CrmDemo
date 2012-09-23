@@ -10,44 +10,40 @@ import com.vaadin.addon.touchkit.ui.TouchKitWindow;
 import com.vaadin.ui.HorizontalLayout;
 
 public class CrmApp extends TouchKitApplication {
-	
-	static { Generator.ensureAvailabilityOfMockupData(); }
 
-	HorizontalLayout lo = new HorizontalLayout();
+	static {
+		Generator.ensureAvailabilityOfMockupData();
+	}
 
-	NavigationManager left = new NavigationManager();
-	NavigationManager right = new NavigationManager();
-
+	HorizontalLayout layout = new HorizontalLayout();
+	NavigationManager leftNavigation = new NavigationManager();
+	NavigationManager rightNavigation = new NavigationManager();
 	DetailsView detailsView = new DetailsView();
-	AccountListView accountListView = new AccountListView();
 	StatusView dashboardView = new StatusView();
 
 	public void onBrowserDetailsReady() {
 		TouchKitWindow w = new TouchKitWindow();
+		w.setContent(layout);
 		setMainWindow(w);
-
 		w.setCaption("CRM");
 
-		HorizontalLayout lo = new HorizontalLayout();
-		lo.setSizeFull();
-		w.setContent(lo);
+		layout.setSizeFull();
+		layout.addComponent(leftNavigation);
+		layout.addComponent(rightNavigation);
 
-		lo.addComponent(left);
-		lo.addComponent(right);
-
-		left.setCurrentComponent(accountListView);
-		right.setPreviousComponent(detailsView);
-		right.setCurrentComponent(dashboardView);
+		leftNavigation.setCurrentComponent(new AccountListView());
+		rightNavigation.setPreviousComponent(detailsView);
+		rightNavigation.setCurrentComponent(dashboardView);
 	}
 
 	public void showDetails(EntityItem<? extends Record> record) {
-		if (right.getPreviousComponent() == detailsView)
-			right.navigateBack();
+		while (rightNavigation.getCurrentComponent() != detailsView)
+			rightNavigation.navigateBack();
 		detailsView.setRecord(record);
 	}
 
 	public void hideDetails() {
-		right.navigateTo(dashboardView);
+		rightNavigation.navigateTo(dashboardView);
 	}
 
 }
