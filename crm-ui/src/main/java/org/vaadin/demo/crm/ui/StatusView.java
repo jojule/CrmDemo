@@ -14,55 +14,65 @@ import com.vaadin.ui.VerticalLayout;
 
 public class StatusView extends NavigationView {
 
-	VerticalLayout content = new VerticalLayout();
+	VerticalLayout layout = new VerticalLayout();
 
 	public StatusView() {
-
-		setContent(content);
+		setContent(layout);
 		getNavigationBar().setCaption("Status");
 		getNavigationBar().setLeftComponent(null);
 
-		VerticalComponentGroup pipeline = new VerticalComponentGroup(
-				"My Pipeline");
-		content.addComponent(pipeline);
+		buildPipelineStatus();
+		buildLeadList();
+	}
+
+	private void buildLeadList() {
+		VerticalComponentGroup leadList = new VerticalComponentGroup(
+				"Unprocessed Leads");
+		layout.addComponent(leadList);
+
+		for (Lead lead : Backend.getLeads()) {
+			// Create view for lead details
+			NavigationView leadDetailsView = new NavigationView();
+			leadDetailsView.setCaption(lead.getTitle());
+			VerticalComponentGroup descriptionBox = new VerticalComponentGroup();
+			descriptionBox.addComponent(new Label(lead.getDescriptionHtml(),
+					Label.CONTENT_XHTML));
+			leadDetailsView.setContent(descriptionBox);
+
+			// Create button to navigate to the details view
+			NavigationButton showLeadButton = new NavigationButton();
+			showLeadButton.setCaption(lead.getTitle());
+			showLeadButton.setTargetView(leadDetailsView);
+			leadList.addComponent(showLeadButton);
+		}
+	}
+
+	private void buildPipelineStatus() {
 		PipelineStage[] stages = Backend.getPipelineReport();
+
 		DistributionBar graph = new DistributionBar(stages.length);
+		VerticalComponentGroup stageList = new VerticalComponentGroup(
+				"My Pipeline");
+
+		// Add sales pipeline stage statistics from the backend
+		for (int i = 0; i < stages.length; i++) {
+			graph.setPartSize(i, stages[i].getTotalValue());
+			graph.setPartTooltip(i, stages[i].getName());
+			String html = "<b>" + stages[i].getName() + "</b> "
+					+ +stages[i].getOpportunityCount() + " opportunities, $"
+					+ stages[i].getTotalValue() + " total value, $"
+					+ stages[i].getProbabilityAdjustedValue() + " expected";
+			stageList.addComponent(new Label(html, Label.CONTENT_XHTML));
+		}
+		layout.addComponent(stageList);
+
+		// Add pipeline graph to view
 		VerticalLayout wrapper = new VerticalLayout();
 		wrapper.addComponent(graph);
 		wrapper.setMargin(true);
-		content.addComponent(wrapper);
+		layout.addComponent(wrapper);
 		graph.setWidth("100%");
 		wrapper.setComponentAlignment(graph, Alignment.MIDDLE_CENTER);
 
-		for (int i = 0; i < stages.length; i++) {
-			graph.setPartSize(i, stages[i].getTotalValue());
-			graph.setPartTooltip(
-					i,
-					stages[i].getName() + ": "
-							+ stages[i].getOpportunityCount());
-			pipeline.addComponent(new Label("<b>" + stages[i].getName()
-					+ "</b> " + +stages[i].getOpportunityCount()
-					+ " opportunities, $" + stages[i].getTotalValue()
-					+ " total value, $"
-					+ stages[i].getProbabilityAdjustedValue()
-					+ " expected", Label.CONTENT_XHTML));
-		}
-
-		VerticalComponentGroup leads = new VerticalComponentGroup(
-				"Unprocessed Leads");
-		content.addComponent(leads);
-
-		for (Lead l : Backend.getLeads()) {
-			NavigationButton b = new NavigationButton();
-			b.setCaption(l.getTitle());
-			NavigationView leadDetails = new NavigationView();
-			leadDetails.setCaption(b.getCaption());
-			VerticalComponentGroup leadInfo = new VerticalComponentGroup();
-			leadInfo.addComponent(new Label(l.getDescriptionHtml(),
-					Label.CONTENT_XHTML));
-			leadDetails.setContent(leadInfo);
-			b.setTargetView(leadDetails);
-			leads.addComponent(b);
-		}
 	}
 }

@@ -2,6 +2,7 @@ package org.vaadin.demo.crm.ui;
 
 import org.vaadin.demo.crm.data.Record;
 import org.vaadin.demo.crm.data.mockup.Generator;
+import org.vaadin.demo.crm.ui.DetailsView.UpdateListener;
 
 import com.vaadin.addon.jpacontainer.EntityItem;
 import com.vaadin.addon.touchkit.ui.NavigationManager;
@@ -10,44 +11,41 @@ import com.vaadin.addon.touchkit.ui.TouchKitWindow;
 import com.vaadin.ui.HorizontalLayout;
 
 public class CrmApp extends TouchKitApplication {
-	
-	static { Generator.ensureAvailabilityOfMockupData(); }
 
-	HorizontalLayout lo = new HorizontalLayout();
+	static {
+		Generator.ensureAvailabilityOfMockupData();
+	}
 
-	NavigationManager left = new NavigationManager();
-	NavigationManager right = new NavigationManager();
-
+	HorizontalLayout layout = new HorizontalLayout();
+	NavigationManager leftNavigation = new NavigationManager();
+	NavigationManager rightNavigation = new NavigationManager();
 	DetailsView detailsView = new DetailsView();
-	AccountListView accountListView = new AccountListView();
 	StatusView dashboardView = new StatusView();
 
 	public void onBrowserDetailsReady() {
 		TouchKitWindow w = new TouchKitWindow();
+		w.setContent(layout);
 		setMainWindow(w);
-
 		w.setCaption("CRM");
 
-		HorizontalLayout lo = new HorizontalLayout();
-		lo.setSizeFull();
-		w.setContent(lo);
+		layout.setSizeFull();
+		layout.addComponent(leftNavigation);
+		layout.addComponent(rightNavigation);
 
-		lo.addComponent(left);
-		lo.addComponent(right);
-
-		left.setCurrentComponent(accountListView);
-		right.setPreviousComponent(detailsView);
-		right.setCurrentComponent(dashboardView);
+		leftNavigation.setCurrentComponent(new AccountListView());
+		rightNavigation.setPreviousComponent(detailsView);
+		rightNavigation.setCurrentComponent(dashboardView);
 	}
 
-	public void showDetails(EntityItem<? extends Record> record) {
-		if (right.getPreviousComponent() == detailsView)
-			right.navigateBack();
-		detailsView.setRecord(record);
+	public void showDetailsView(EntityItem<? extends Record> recordToEdit,
+			UpdateListener listener) {
+		while (rightNavigation.getCurrentComponent() != detailsView)
+			rightNavigation.navigateBack();
+		detailsView.setRecord(recordToEdit, listener);
 	}
 
-	public void hideDetails() {
-		right.navigateTo(dashboardView);
+	public void hideDetailsView() {
+		rightNavigation.navigateTo(dashboardView);
 	}
 
 }

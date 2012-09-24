@@ -6,8 +6,6 @@ import org.vaadin.demo.crm.data.Account;
 import com.vaadin.addon.jpacontainer.EntityItem;
 import com.vaadin.addon.jpacontainer.JPAContainer;
 import com.vaadin.addon.jpacontainer.JPAContainerFactory;
-import com.vaadin.addon.touchkit.ui.NavigationManager.NavigationEvent;
-import com.vaadin.addon.touchkit.ui.NavigationManager.NavigationListener;
 import com.vaadin.addon.touchkit.ui.NavigationView;
 import com.vaadin.addon.touchkit.ui.Popover;
 import com.vaadin.data.util.filter.SimpleStringFilter;
@@ -21,67 +19,76 @@ import com.vaadin.ui.HorizontalLayout;
 import com.vaadin.ui.Table;
 import com.vaadin.ui.TextField;
 
-public class AccountListView extends NavigationView implements
-		ItemClickListener, ClickListener {
-	Table accountList = new Table();
-	Button findButton = new Button("Find");
+public class AccountListView extends NavigationView {
+
 	JPAContainer<Account> accounts = JPAContainerFactory.make(Account.class,
 			Backend.PERSISTENCE_UNIT);
 
+	Button findButton = new Button("Find", new ClickListener() {
+		public void buttonClick(ClickEvent event) {
+			accounts.removeAllContainerFilters();
+			new FindDialog();
+		}
+	});
+
 	public AccountListView() {
 		getNavigationBar().setCaption("Accounts");
-		setContent(accountList);
-
-		accountList.addListener(this);
-		accountList.setSizeFull();
-		accountList.setImmediate(true);
-		accountList.setContainerDataSource(accounts);
-		accountList.setVisibleColumns(new Object[] { "name", "sales" });
-
 		getNavigationBar().setLeftComponent(findButton);
-		findButton.addListener(this);
+		setContent(new AccountList());
+	}
+	
+	protected void onBecomingVisible() {
+		((CrmApp) getApplication()).hideDetailsView();
+		super.onBecomingVisible();
 	}
 
-	/* Choose an account */
-	public void itemClick(ItemClickEvent event) {
-		if (getNavigationManager().getCurrentComponent() != this)
-			return;
-		EntityItem<Account> account = accounts.getItem(event.getItemId());
-		AccountView accountView = new AccountView(account);
-		getNavigationManager().navigateTo(accountView);
-		((CrmApp) getApplication()).showDetails(account);
-		getNavigationManager().addListener(new NavigationListener() {
-			public void navigate(NavigationEvent event) {
-				((CrmApp) getApplication()).hideDetails();
-			}
-		});
+	// List of accounts filling the view
+	class AccountList extends Table implements ItemClickListener {
+		public AccountList() {
+			setSizeFull();
+			setImmediate(true);
+			setContainerDataSource(accounts);
+			setVisibleColumns(new Object[] { "name", "sales" });
+			addListener((ItemClickListener) this);
+		}
+
+		public void itemClick(ItemClickEvent event) {
+			if (getNavigationManager().getCurrentComponent() != AccountListView.this)
+				return;
+
+			EntityItem<Account> account = accounts.getItem(event.getItemId());
+			AccountView accountView = new AccountView(account);
+			getNavigationManager().navigateTo(accountView);
+
+			((CrmApp) getApplication()).showDetailsView(account, accountView);
+		}
+
 	}
 
-	/* Find */
-	public void buttonClick(ClickEvent event) {
-		final Popover p = new Popover();
-		accounts.removeAllContainerFilters();
-		getWindow().addWindow(p);
-		p.showRelativeTo(findButton);
+	// Dialog shown when Find button is clicked
+	class FindDialog extends Popover implements ClickListener {
+		TextField nameFilter = new TextField();
+		Button searchButton = new Button("Search");
+		HorizontalLayout layout = new HorizontalLayout();
 
-		HorizontalLayout lo = new HorizontalLayout();
-		lo.setMargin(true);
-		lo.setSpacing(true);
+		public FindDialog() {
+			showRelativeTo(findButton);
 
-		final TextField name = new TextField();
-		name.setInputPrompt("Customer name");
-		Button search = new Button("Search");
-		lo.addComponent(name);
-		lo.addComponent(search);
-		lo.setComponentAlignment(name, Alignment.MIDDLE_CENTER);
-		p.setContent(lo);
+			setContent(layout);
+			layout.setMargin(true);
+			layout.setSpacing(true);
+			layout.addComponent(nameFilter);
+			layout.setComponentAlignment(nameFilter, Alignment.MIDDLE_CENTER);
+			layout.addComponent(searchButton);
 
-		search.addListener(new ClickListener() {
-			public void buttonClick(ClickEvent event) {
-				accounts.addContainerFilter(new SimpleStringFilter("name", (String) name
-						.getValue(), true, false));
-				getWindow().removeWindow(p);
-			}
-		});
+			nameFilter.setInputPrompt("Customer name");
+			searchButton.addListener(this);
+		}
+
+		public void buttonClick(ClickEvent event) {
+			accounts.addContainerFilter(new SimpleStringFilter("name",
+					(String) nameFilter.getValue(), true, false));
+			AccountListView.this.getWindow().removeWindow(this);
+		}
 	}
 }
