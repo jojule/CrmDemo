@@ -67,7 +67,6 @@
 				<configuration>
 					<extraJvmArgs>-Xmx512M -Xss1024k</extraJvmArgs>
 					<webappDirectory>${project.build.directory}/widgetset/VAADIN/widgetsets</webappDirectory>
-					<force>true</force>
 				</configuration>
 				<executions>
 					<execution>
@@ -119,12 +118,11 @@
 										<artifactId>gwt-maven-plugin</artifactId>
 										<versionRange>[2.3.0,)</versionRange>
 										<goals>
-											<goal>resources</goal>
 											<goal>compile</goal>
 										</goals>
 									</pluginExecutionFilter>
 									<action>
-										<ignore></ignore>
+										<execute/>
 									</action>
 								</pluginExecution>
 							</pluginExecutions>
