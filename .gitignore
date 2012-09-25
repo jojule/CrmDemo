@@ -8,6 +8,6 @@ target/
 *.classpath
 
 *.settings/
-
+rebel.xml
 *.db
 crm-widgetset/src/main/java/META-INF/MANIFEST.MF

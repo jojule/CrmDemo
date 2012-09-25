@@ -33,19 +33,18 @@ public class CrmApp extends TouchKitApplication {
 		layout.addComponent(rightNavigation);
 
 		leftNavigation.setCurrentComponent(new AccountListView());
-		rightNavigation.setPreviousComponent(detailsView);
 		rightNavigation.setCurrentComponent(dashboardView);
 	}
 
 	public void showDetailsView(EntityItem<? extends Record> recordToEdit,
 			UpdateListener listener) {
-		while (rightNavigation.getCurrentComponent() != detailsView)
-			rightNavigation.navigateBack();
+		rightNavigation.navigateTo(detailsView);
 		detailsView.setRecord(recordToEdit, listener);
 	}
 
 	public void hideDetailsView() {
-		rightNavigation.navigateTo(dashboardView);
+		while (rightNavigation.getCurrentComponent() != dashboardView) 
+			rightNavigation.navigateBack();
 	}
 
 }

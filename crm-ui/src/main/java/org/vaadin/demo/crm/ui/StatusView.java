@@ -19,7 +19,6 @@ public class StatusView extends NavigationView {
 	public StatusView() {
 		setContent(layout);
 		getNavigationBar().setCaption("Status");
-		getNavigationBar().setLeftComponent(null);
 
 		buildPipelineStatus();
 		buildLeadList();
