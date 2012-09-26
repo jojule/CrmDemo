@@ -55,12 +55,13 @@ public class StatusView extends NavigationView {
 
 		// Add sales pipeline stage statistics from the backend
 		for (int i = 0; i < stages.length; i++) {
-			graph.setPartSize(i, stages[i].getTotalValue());
-			graph.setPartTooltip(i, stages[i].getName());
-			String html = "<div><b>" + stages[i].getName() + "</b> "
-					+ +stages[i].getOpportunityCount() + " opportunities, $"
-					+ stages[i].getTotalValue() + " total value, $"
-					+ stages[i].getProbabilityAdjustedValue() + " expected</div>";
+			PipelineStage s = stages[i];
+			graph.setPartSize(i, s.getTotalValue());
+			graph.setPartTooltip(i, s.getName());
+			String html = String.format("<div><b>%s</b> %d opportunities, "
+					+ "$%d  total value, $%d expected</div>", s.getName(),
+					s.getOpportunityCount(), s.getTotalValue(),
+					s.getProbabilityAdjustedValue());
 			stageList.addComponent(new Label(html, Label.CONTENT_XHTML));
 		}
 		layout.addComponent(stageList);
