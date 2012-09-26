@@ -2,8 +2,6 @@ package org.vaadin.demo.crm.ui;
 
 import java.util.Arrays;
 import java.util.HashSet;
-import java.util.Iterator;
-import java.util.LinkedList;
 import java.util.Set;
 
 import org.vaadin.demo.crm.data.Record;
@@ -24,7 +22,6 @@ import com.vaadin.ui.Button.ClickListener;
 import com.vaadin.ui.Component;
 import com.vaadin.ui.Field;
 import com.vaadin.ui.Form;
-import com.vaadin.ui.Layout;
 import com.vaadin.ui.TextArea;
 
 public class DetailsView extends NavigationView {
@@ -115,13 +112,21 @@ public class DetailsView extends NavigationView {
 		}
 	}
 
+	/** Array containing properties that should displayed on top of forms */
+	private static final String[] prioritizeProperties = { "name", "lastName",
+			"firstName" };
+
 	private void sortFormFields() {
-		// Ensure name field is the first one to display in UI, let others be in
-		// whatever order jvm desides to list them
+		// Ensure important fields are displayed first, let others be in
+		// whatever order jvm desides to list them. For more explicit ordering
+		// developers should use Form.setItemDataSource(Item, Collection);
 		AbstractOrderedLayout layout = (AbstractOrderedLayout) recordForm
 				.getLayout();
-		Field namefield = recordForm.getField("name");
-		layout.addComponentAsFirst(namefield);
+		for (String p : prioritizeProperties) {
+			Field namefield = recordForm.getField(p);
+			if (namefield != null)
+				layout.addComponentAsFirst(namefield);
+		}
 	}
 
 	interface UpdateListener {
