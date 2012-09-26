@@ -16,6 +16,7 @@ import com.vaadin.addon.touchkit.ui.Switch;
 import com.vaadin.addon.touchkit.ui.VerticalComponentGroup;
 import com.vaadin.data.Item;
 import com.vaadin.data.Property;
+import com.vaadin.ui.AbstractOrderedLayout;
 import com.vaadin.ui.AbstractSelect;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;
@@ -97,7 +98,7 @@ public class DetailsView extends NavigationView {
 				return new Switch(createCaptionByPropertyId(propertyId),
 						fieldDatasource);
 			}
-			
+
 			if (fieldDatasource.getType() == String.class
 					&& propertyId.equals("description")) {
 				TextArea a = new TextArea("Description", fieldDatasource);
@@ -115,18 +116,12 @@ public class DetailsView extends NavigationView {
 	}
 
 	private void sortFormFields() {
-		Layout l = recordForm.getLayout();
-		LinkedList<Component> tmp = new LinkedList<Component>();
-		for (Iterator<Component> i = l.getComponentIterator(); i.hasNext();) {
-			Component c = i.next();
-			if (!c.getCaption().toLowerCase().contains("name")) {
-				tmp.add(c);
-			}
-		}
-		for (Component c : tmp)
-			l.removeComponent(c);
-		for (Component c : tmp)
-			l.addComponent(c);
+		// Ensure name field is the first one to display in UI, let others be in
+		// whatever order jvm desides to list them
+		AbstractOrderedLayout layout = (AbstractOrderedLayout) recordForm
+				.getLayout();
+		Field namefield = recordForm.getField("name");
+		layout.addComponentAsFirst(namefield);
 	}
 
 	interface UpdateListener {
