@@ -1,7 +1,10 @@
 package org.vaadin.demo.crm.ui;
 
+import java.util.Arrays;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.LinkedList;
+import java.util.Set;
 
 import org.vaadin.demo.crm.data.Record;
 
@@ -64,7 +67,7 @@ public class DetailsView extends NavigationView {
 	}
 
 	// Customize the fields in the form
-	class DefailsFieldFactory extends FieldFactory {
+	static class DefailsFieldFactory extends FieldFactory {
 
 		// Show record names properly in entity link dropdowns
 		protected Field createManyToOneField(
@@ -78,21 +81,23 @@ public class DetailsView extends NavigationView {
 			return f;
 		}
 
+		static final Set<Object> hiddenProperties = new HashSet<Object>(
+				Arrays.asList("recordName", "recordTypePlural", "id",
+						"recordType"));
+
 		public Field createField(Item item, Object propertyId, Component context) {
 
 			// Hide technical fields from form
-			if (propertyId.equals("recordName")
-					|| propertyId.equals("recordTypePlural")
-					|| propertyId.equals("id")
-					|| propertyId.equals("recordType"))
+			if (hiddenProperties.contains(propertyId))
 				return null;
 
 			Property fieldDatasource = item.getItemProperty(propertyId);
+			// Use IOS style switch instead of checkbox created by default
 			if (fieldDatasource.getType() == Boolean.class) {
-				String name = "" + propertyId;
-				name = Character.toUpperCase(name.charAt(0)) + name.substring(1);
-				return new Switch(name, fieldDatasource);
+				return new Switch(createCaptionByPropertyId(propertyId),
+						fieldDatasource);
 			}
+			
 			if (fieldDatasource.getType() == String.class
 					&& propertyId.equals("description")) {
 				TextArea a = new TextArea("Description", fieldDatasource);
@@ -118,7 +123,7 @@ public class DetailsView extends NavigationView {
 				tmp.add(c);
 			}
 		}
-		for (Component c : tmp) 
+		for (Component c : tmp)
 			l.removeComponent(c);
 		for (Component c : tmp)
 			l.addComponent(c);
