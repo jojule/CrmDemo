@@ -23,6 +23,10 @@
 			<url>http://maven.vaadin.com/vaadin-addons</url>
 		</repository>
 		<repository>
+			<id>vaadin-releases</id>
+			<url>https://oss.sonatype.org/content/repositories/vaadin-releases/</url>
+		</repository>
+		<repository>
 			<id>EclipseLink Repo</id>
 			<url>http://www.eclipse.org/downloads/download.php?r=1&amp;nf=1&amp;file=/rt/eclipselink/maven.repo</url>
 		</repository>
