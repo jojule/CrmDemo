@@ -23,7 +23,7 @@ public class AccountView extends NavigationView implements
 	VerticalLayout layout = new VerticalLayout();
 	Button editButton = new Button("Edit", new ClickListener() {
 		public void buttonClick(ClickEvent event) {
-			((CrmApp) getApplication()).showDetailsView(account, AccountView.this);
+			((CrmUI) getUI()).showDetailsView(account, AccountView.this);
 		}
 	});
 
@@ -63,7 +63,7 @@ public class AccountView extends NavigationView implements
 							EntityItem<? extends Record> item = JPAContainerFactory
 									.make(recordClass, Backend.PERSISTENCE_UNIT)
 									.getItem(recordId);
-							((CrmApp) getApplication()).showDetailsView(item,
+							((CrmUI) getUI()).showDetailsView(item,
 									AccountView.this);
 						}
 					});

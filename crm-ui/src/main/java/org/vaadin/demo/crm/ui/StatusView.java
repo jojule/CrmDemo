@@ -1,6 +1,5 @@
 package org.vaadin.demo.crm.ui;
 
-import org.vaadin.alump.distributionbar.DistributionBar;
 import org.vaadin.demo.crm.Backend;
 import org.vaadin.demo.crm.data.Lead;
 import org.vaadin.demo.crm.data.PipelineStage;
@@ -47,32 +46,32 @@ public class StatusView extends NavigationView {
 	}
 
 	private void buildPipelineStatus() {
-		PipelineStage[] stages = Backend.getPipelineReport();
-
-		DistributionBar graph = new DistributionBar(stages.length);
-		VerticalComponentGroup stageList = new VerticalComponentGroup(
-				"My Pipeline");
-
-		// Add sales pipeline stage statistics from the backend
-		for (int i = 0; i < stages.length; i++) {
-			PipelineStage s = stages[i];
-			graph.setPartSize(i, s.getTotalValue());
-			graph.setPartTooltip(i, s.getName());
-			String html = String.format("<div><b>%s</b> %d opportunities, "
-					+ "$%d  total value, $%d expected</div>", s.getName(),
-					s.getOpportunityCount(), s.getTotalValue(),
-					s.getProbabilityAdjustedValue());
-			stageList.addComponent(new Label(html, Label.CONTENT_XHTML));
-		}
-		layout.addComponent(stageList);
-
-		// Add pipeline graph to view
-		VerticalLayout wrapper = new VerticalLayout();
-		wrapper.addComponent(graph);
-		wrapper.setMargin(true);
-		layout.addComponent(wrapper);
-		graph.setWidth("100%");
-		wrapper.setComponentAlignment(graph, Alignment.MIDDLE_CENTER);
+//		PipelineStage[] stages = Backend.getPipelineReport();
+//
+//		DistributionBar graph = new DistributionBar(stages.length);
+//		VerticalComponentGroup stageList = new VerticalComponentGroup(
+//				"My Pipeline");
+//
+//		// Add sales pipeline stage statistics from the backend
+//		for (int i = 0; i < stages.length; i++) {
+//			PipelineStage s = stages[i];
+//			graph.setPartSize(i, s.getTotalValue());
+//			graph.setPartTooltip(i, s.getName());
+//			String html = String.format("<div><b>%s</b> %d opportunities, "
+//					+ "$%d  total value, $%d expected</div>", s.getName(),
+//					s.getOpportunityCount(), s.getTotalValue(),
+//					s.getProbabilityAdjustedValue());
+//			stageList.addComponent(new Label(html, Label.CONTENT_XHTML));
+//		}
+//		layout.addComponent(stageList);
+//
+//		// Add pipeline graph to view
+//		VerticalLayout wrapper = new VerticalLayout();
+//		wrapper.addComponent(graph);
+//		wrapper.setMargin(true);
+//		layout.addComponent(wrapper);
+//		graph.setWidth("100%");
+//		wrapper.setComponentAlignment(graph, Alignment.MIDDLE_CENTER);
 
 	}
 }

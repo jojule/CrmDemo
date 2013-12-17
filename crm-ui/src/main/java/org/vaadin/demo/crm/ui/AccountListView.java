@@ -38,7 +38,7 @@ public class AccountListView extends NavigationView {
 	}
 	
 	protected void onBecomingVisible() {
-		((CrmApp) getApplication()).hideDetailsView();
+		((CrmUI) getUI()).hideDetailsView();
 		super.onBecomingVisible();
 	}
 
@@ -60,7 +60,7 @@ public class AccountListView extends NavigationView {
 			AccountView accountView = new AccountView(account);
 			getNavigationManager().navigateTo(accountView);
 
-			((CrmApp) getApplication()).showDetailsView(account, accountView);
+			((CrmUI) getUI()).showDetailsView(account, accountView);
 		}
 
 	}
@@ -88,7 +88,7 @@ public class AccountListView extends NavigationView {
 		public void buttonClick(ClickEvent event) {
 			accounts.addContainerFilter(new SimpleStringFilter("name",
 					(String) nameFilter.getValue(), true, false));
-			AccountListView.this.getWindow().removeWindow(this);
+			this.close();
 		}
 	}
 }

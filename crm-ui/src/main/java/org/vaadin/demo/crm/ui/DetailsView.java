@@ -50,7 +50,7 @@ public class DetailsView extends NavigationView {
 		formGroup.addComponent(recordForm);
 
 		recordForm.setFormFieldFactory(new DefailsFieldFactory());
-		recordForm.setWriteThrough(false);
+		recordForm.setBuffered(true);
 	}
 
 	public void setRecord(EntityItem<? extends Record> record,
