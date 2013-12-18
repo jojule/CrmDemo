@@ -11,4 +11,8 @@
         
         <inherits name="com.vaadin.addon.touchkit.gwt.TouchKitWidgetSet" />
     
+
+    <inherits name="com.vaadin.addon.charts.Widgetset" />
+
+    <inherits name="com.vaadin.addon.timeline.gwt.TimelineWidgetSet" />
 </module>

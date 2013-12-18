@@ -1,79 +1,56 @@
 package org.vaadin.demo.crm.ui;
 
-import java.util.HashMap;
+import java.io.IOException;
+import java.util.Collection;
+import java.util.List;
+import java.util.Locale;
 
-import org.vaadin.demo.crm.Backend;
+import org.json.JSONException;
+import org.json.JSONObject;
 import org.vaadin.demo.crm.data.Account;
-import org.vaadin.demo.crm.data.Record;
 
 import com.vaadin.addon.jpacontainer.EntityItem;
-import com.vaadin.addon.jpacontainer.JPAContainerFactory;
+import com.vaadin.addon.touchkit.gwt.client.vcom.navigation.NavigationViewServerRpc;
 import com.vaadin.addon.touchkit.ui.NavigationView;
+import com.vaadin.addon.touchkit.ui.NumberField;
+import com.vaadin.addon.touchkit.ui.Switch;
 import com.vaadin.addon.touchkit.ui.VerticalComponentGroup;
-import com.vaadin.ui.Button;
-import com.vaadin.ui.Button.ClickEvent;
-import com.vaadin.ui.Button.ClickListener;
-import com.vaadin.ui.VerticalLayout;
+import com.vaadin.data.fieldgroup.FieldGroup;
+import com.vaadin.server.ClientMethodInvocation;
+import com.vaadin.server.ErrorHandler;
+import com.vaadin.server.Extension;
+import com.vaadin.server.Resource;
+import com.vaadin.server.ServerRpcManager;
+import com.vaadin.server.VaadinRequest;
+import com.vaadin.server.VaadinResponse;
+import com.vaadin.shared.communication.SharedState;
+import com.vaadin.ui.Component;
+import com.vaadin.ui.Form;
+import com.vaadin.ui.HasComponents;
+import com.vaadin.ui.TextField;
+import com.vaadin.ui.UI;
 
-public class AccountView extends NavigationView implements
-		DetailsView.UpdateListener {
-
-	EntityItem<Account> account;
-
-	VerticalLayout layout = new VerticalLayout();
-	Button editButton = new Button("Edit", new ClickListener() {
-		public void buttonClick(ClickEvent event) {
-			((CrmUI) getUI()).showDetailsView(account, AccountView.this);
-		}
-	});
+public class AccountView extends NavigationView {
+	
+	private EntityItem<Account> account;
 
 	public AccountView(EntityItem<Account> account) {
 		this.account = account;
-
-		setContent(layout);
-		getNavigationBar().setCaption(account.getEntity().getRecordName());
-		getNavigationBar().setRightComponent(editButton);
-
-		updateNavigationButtonsForRelatedRecords();
+		FieldGroup g= new FieldGroup(account);
+		AccountData form = new AccountData();
+		g.bindMemberFields(form );
+		setContent(form);
 	}
 
-	public void updateNavigationButtonsForRelatedRecords() {
-
-		layout.removeAllComponents();
-
-		@SuppressWarnings("rawtypes")
-		HashMap<Class, VerticalComponentGroup> buttonGroups = new HashMap<Class, VerticalComponentGroup>();
-
-		for (Record r : Backend.getRecords((Account) account.getEntity())) {
-			VerticalComponentGroup buttonGroup = buttonGroups.get(r.getClass());
-
-			if (buttonGroup == null) {
-				buttonGroup = new VerticalComponentGroup();
-				buttonGroup.setCaption(r.getRecordTypePlural());
-				buttonGroups.put(r.getClass(), buttonGroup);
-				layout.addComponent(buttonGroup);
-			}
-
-			// Create a button to show the given records
-			final Long recordId = r.getId();
-			final Class<? extends Record> recordClass = r.getClass();
-			Button showRecordButton = new Button(r.getRecordName(),
-					new ClickListener() {
-						public void buttonClick(ClickEvent event) {
-							EntityItem<? extends Record> item = JPAContainerFactory
-									.make(recordClass, Backend.PERSISTENCE_UNIT)
-									.getItem(recordId);
-							((CrmUI) getUI()).showDetailsView(item,
-									AccountView.this);
-						}
-					});
-			buttonGroup.addComponent(showRecordButton);
-			showRecordButton.setStyleName("nav");
+	class AccountData extends VerticalComponentGroup {
+		TextField name = new TextField("Customer");
+		TextField sales = new TextField("Total sales");
+		Switch active = new Switch("Active");
+		public AccountData() {
+			addComponent(name);
+			addComponent(sales);
+			addComponent(active);
 		}
-	}
-
-	public void recordUpdatedByDetailsView() {
-		updateNavigationButtonsForRelatedRecords();
-		getNavigationBar().setCaption(account.getEntity().getRecordName());
+		
 	}
 }

@@ -1,21 +1,47 @@
 CACHE MANIFEST
-# Build timeWed Dec 18 00:17:21 CET 2013
+# Build timeWed Dec 18 01:32:02 CET 2013
 
 CACHE:
 ../../../VAADIN/themes/touchkit/styles.css
 ../../../VAADIN/vaadinBootstrap.js
-24D3366FAF3B2CF99DFA61261155469C.cache.js
+3BFAB961D4376EC7DED0348F65093EB0.cache.js
 650109D413E2C231EC22108817C9E71A.cache.woff
 clear.cache.gif
-deferredjs/24D3366FAF3B2CF99DFA61261155469C/1.cache.js
-deferredjs/24D3366FAF3B2CF99DFA61261155469C/2.cache.js
-deferredjs/24D3366FAF3B2CF99DFA61261155469C/3.cache.js
-deferredjs/24D3366FAF3B2CF99DFA61261155469C/4.cache.js
-deferredjs/24D3366FAF3B2CF99DFA61261155469C/5.cache.js
-deferredjs/24D3366FAF3B2CF99DFA61261155469C/6.cache.js
-deferredjs/24D3366FAF3B2CF99DFA61261155469C/7.cache.js
-deferredjs/24D3366FAF3B2CF99DFA61261155469C/8.cache.js
-deferredjs/24D3366FAF3B2CF99DFA61261155469C/9.cache.js
+com_vaadin_addon_timeline/ajax-loader.gif
+com_vaadin_addon_timeline/arrow-left.png
+com_vaadin_addon_timeline/arrow-right.png
+com_vaadin_addon_timeline/barChart.png
+com_vaadin_addon_timeline/lineChart.png
+com_vaadin_addon_timeline/marker.png
+com_vaadin_addon_timeline/popup_bg.png
+com_vaadin_addon_timeline/right_arrow.png
+com_vaadin_addon_timeline/scatterChart.png
+com_vaadin_addon_timeline/scroll-grip.png
+com_vaadin_addon_timeline/scroll-left-mobile.gif
+com_vaadin_addon_timeline/scroll-right-mobile.gif
+com_vaadin_addon_timeline/scrollbar-area-bg.png
+com_vaadin_addon_timeline/scrollbar-bg.png
+com_vaadin_addon_timeline/scroller.png
+com_vaadin_addon_timeline/scroller_hover.png
+com_vaadin_addon_timeline/styles.css
+com_vaadin_addon_timeline/tooltipBottom.png
+com_vaadin_addon_timeline/tooltipLeft.png
+com_vaadin_addon_timeline/tooltipLeftBottom.png
+com_vaadin_addon_timeline/tooltipLeftTop.png
+com_vaadin_addon_timeline/tooltipRight.png
+com_vaadin_addon_timeline/tooltipRightBottom.png
+com_vaadin_addon_timeline/tooltipRightTop.png
+com_vaadin_addon_timeline/tooltipTop.png
+com_vaadin_addon_timeline/vertical-sprites.png
+deferredjs/3BFAB961D4376EC7DED0348F65093EB0/1.cache.js
+deferredjs/3BFAB961D4376EC7DED0348F65093EB0/2.cache.js
+deferredjs/3BFAB961D4376EC7DED0348F65093EB0/3.cache.js
+deferredjs/3BFAB961D4376EC7DED0348F65093EB0/4.cache.js
+deferredjs/3BFAB961D4376EC7DED0348F65093EB0/5.cache.js
+deferredjs/3BFAB961D4376EC7DED0348F65093EB0/6.cache.js
+deferredjs/3BFAB961D4376EC7DED0348F65093EB0/7.cache.js
+deferredjs/3BFAB961D4376EC7DED0348F65093EB0/8.cache.js
+deferredjs/3BFAB961D4376EC7DED0348F65093EB0/9.cache.js
 org.vaadin.demo.crm.ui.CrmWidgetSet.devmode.js
 org.vaadin.demo.crm.ui.CrmWidgetSet.nocache.js
 
