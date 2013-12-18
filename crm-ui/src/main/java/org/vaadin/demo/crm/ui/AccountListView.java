@@ -31,14 +31,22 @@ public class AccountListView extends NavigationView {
 			setContainerDataSource(accounts);
 			setVisibleColumns(new Object[]{"name","sales"});
 			addItemClickListener(this);
+			
+			getNavigationBar().setRightComponent(new Button("Filter", new Button.ClickListener() {
+				
+				@Override
+				public void buttonClick(ClickEvent event) {
+					getNavigationManager().navigateTo(new FilterView(accounts));
+					
+				}
+			}));
 		}
 
 		@Override
 		public void itemClick(ItemClickEvent event) {
 			EntityItem<Account> account = accounts.getItem(event.getItemId());
 			Component accountView = new AccountView(account);
-			getNavigationManager().navigateTo(accountView);
-			
+			getNavigationManager().navigateTo(accountView);			
 		}
 		
 	}

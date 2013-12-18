@@ -21,7 +21,7 @@ public class Stats extends NavigationView {
 	
     public static Chart createChart(PipelineStage[] pipelineStages) {
         Chart chart = new Chart(ChartType.PIE);
-
+        chart.setSizeFull();
         Configuration conf = chart.getConfiguration();
 
         conf.setTitle("Pipeline split");
@@ -32,7 +32,7 @@ public class Stats extends NavigationView {
         dataLabels.setColor(new SolidColor(0, 0, 0));
         dataLabels.setConnectorColor(new SolidColor(0, 0, 0));
         dataLabels
-                .setFormatter("''+ this.point.name +': '+ this.percentage +' %'");
+                .setFormatter("''+ this.point.name +''");
         plotOptions.setDataLabels(dataLabels);
         conf.setPlotOptions(plotOptions);
 
