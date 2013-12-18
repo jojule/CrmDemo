@@ -12,6 +12,7 @@ import com.vaadin.addon.charts.model.Labels;
 import com.vaadin.addon.charts.model.PlotOptionsPie;
 import com.vaadin.addon.charts.model.style.SolidColor;
 import com.vaadin.addon.touchkit.ui.NavigationView;
+import com.vaadin.server.Page;
 
 public class Stats extends NavigationView {
 	public Stats() {
@@ -19,7 +20,7 @@ public class Stats extends NavigationView {
 		setContent(c);
 	}
 	
-    public static Chart createChart(PipelineStage[] pipelineStages) {
+    public Chart createChart(PipelineStage[] pipelineStages) {
         Chart chart = new Chart(ChartType.PIE);
         chart.setSizeFull();
         Configuration conf = chart.getConfiguration();
@@ -28,7 +29,7 @@ public class Stats extends NavigationView {
 
         PlotOptionsPie plotOptions = new PlotOptionsPie();
         Labels dataLabels = new Labels();
-        dataLabels.setEnabled(true);
+        dataLabels.setEnabled(isLargeScreenDevice());
         dataLabels.setColor(new SolidColor(0, 0, 0));
         dataLabels.setConnectorColor(new SolidColor(0, 0, 0));
         dataLabels
@@ -49,4 +50,9 @@ public class Stats extends NavigationView {
 
         return chart;
     }
+
+	private boolean isLargeScreenDevice() {
+		Page p = Page.getCurrent();
+		return p.getBrowserWindowWidth() > 1024;
+	}
 }
